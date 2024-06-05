@@ -89,9 +89,8 @@ unsigned long popStartTime = 0;
 bool buzzLedOn = false;
 bool popLedOn = false;
 const int digitPins[10] = {15, 16, 17, 18, 19, 42, 43, 44, 45, 46}; // Pins for digits 0-9
-const int resetPin = 51; // Pin for reset (* and #)
-const int abcdPins[4] = { 47, 48, 49, 50}; // Pins for A, B, C, D
-
+const int resetPin = 51;                                            // Pin for reset (* and #)
+const int abcdPins[4] = {47, 48, 49, 50};                           // Pins for A, B, C, D
 
 void splitInteger(int number, char &hundreds, char &tens, char &units)
 {
@@ -108,20 +107,20 @@ void handleLongPress()
     longPressed = true;
     generateRandomList();
     /*int number = (random(201)); // Generates a random number between 0 and 200
-    char hundreds, tens, units;
-    splitInteger(number, hundreds, tens, units);
+      char hundreds, tens, units;
+      splitInteger(number, hundreds, tens, units);
 
-    // Print the results
-    Serial.print("Hundreds: ");
-    Serial.println(hundreds);
-    Serial.print("Tens: ");
-    Serial.println(tens);
-    Serial.print("Units: ");
-    Serial.println(units);
-    getEntry(hundreds);
-    getEntry(tens);
-    getEntry(units);
-    getEntry('*');*/
+      // Print the results
+      Serial.print("Hundreds: ");
+      Serial.println(hundreds);
+      Serial.print("Tens: ");
+      Serial.println(tens);
+      Serial.print("Units: ");
+      Serial.println(units);
+      getEntry(hundreds);
+      getEntry(tens);
+      getEntry(units);
+      getEntry('*');*/
     // Add your code to handle the long press here
 }
 
@@ -552,7 +551,6 @@ void playTheList()
     }
 }
 
-
 String intToAlphanumeric(int number)
 {
     // Define a string to store the alphanumeric combination
@@ -840,37 +838,48 @@ void confirmSelection()
     }
 }
 
+char getKeypadInput()
+{
+    for (int i = 0; i < 10; i++)
+    {
+        if (digitalRead(digitPins[i]) == LOW)
+        {
+            delay(50); // Debounce delay
+            if (digitalRead(digitPins[i]) == LOW)
+            { // Confirm button press
+                while (digitalRead(digitPins[i]) == LOW)
+                    ; // Wait until button is released
+                return '0' + i;
+            }
+        }
+    }
 
-char getKeypadInput() {
-  for (int i = 0; i < 10; i++) {
-    if (digitalRead(digitPins[i]) == LOW) {
-      delay(50); // Debounce delay
-      if (digitalRead(digitPins[i]) == LOW) { // Confirm button press
-        while (digitalRead(digitPins[i]) == LOW); // Wait until button is released
-        return '0' + i;
-      }
+    if (digitalRead(resetPin) == LOW)
+    {
+        delay(50); // Debounce delay
+        if (digitalRead(resetPin) == LOW)
+        { // Confirm button press
+            while (digitalRead(resetPin) == LOW)
+                ;       // Wait until button is released
+            return '#'; // Use # as reset key
+        }
     }
-  }
-  
-  if (digitalRead(resetPin) == LOW) {
-    delay(50); // Debounce delay
-    if (digitalRead(resetPin) == LOW) { // Confirm button press
-        while (digitalRead(resetPin) == LOW); // Wait until button is released
-        return '#'; // Use # as reset key
-    }
-  }
 
-  for (int i = 0; i < 4; i++) {
-    if (digitalRead(abcdPins[i]) == LOW) {
-      delay(50); // Debounce delay
-      if (digitalRead(abcdPins[i]) == LOW) { // Confirm button press
-        while (digitalRead(abcdPins[i]) == LOW); // Wait until button is released
-        return 'A' + i;
-      }
+    for (int i = 0; i < 4; i++)
+    {
+        if (digitalRead(abcdPins[i]) == LOW)
+        {
+            delay(50); // Debounce delay
+            if (digitalRead(abcdPins[i]) == LOW)
+            { // Confirm button press
+                while (digitalRead(abcdPins[i]) == LOW)
+                    ; // Wait until button is released
+                return 'A' + i;
+            }
+        }
     }
-  }
-  
-  return '\0'; // No key pressed
+
+    return '\0'; // No key pressed
 }
 void setup()
 {
@@ -918,7 +927,16 @@ void setup()
         digitalWrite(ledPins[i], LOW); // Ensure all LEDs are off initially
     }
     testled();
+    for (int i = 0; i < 10; i++)
+    {
+        pinMode(digitPins[i], INPUT_PULLUP);
+    }
+    pinMode(resetPin, INPUT_PULLUP);
 
+    for (int i = 0; i < 4; i++)
+    {
+        pinMode(abcdPins[i], INPUT_PULLUP);
+    }
     Serial.println(F(" C = STOP sequence"));
     // Initialize random number generator
     //  randomSeed(analogRead(0));
