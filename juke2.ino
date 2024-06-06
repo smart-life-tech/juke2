@@ -18,7 +18,8 @@ unsigned long buttonPressStartTime = 0;
 unsigned long pressStartTime = 0;
 const unsigned long longPressDuration = 5000; // 5 seconds
 bool isPressing = false;
-
+unsigned long keyPressStartTime = 0;
+bool isKeyPressed = false;
 int oldSequence = 10;
 bool done_playing = false;
 int row = 16;
@@ -847,8 +848,25 @@ char getKeypadInput()
             delay(50); // Debounce delay
             if (digitalRead(digitPins[i]) == LOW)
             { // Confirm button press
+                if (i == 0)
+                {
+                    // Handle long press for '0'
+                    if (!isKeyPressed)
+                    {
+                        keyPressStartTime = millis();
+                        isKeyPressed = true;
+                    }
+                    else if (millis() - keyPressStartTime >= 5000)
+                    {
+                        //generateRandomList();
+                        handleLongPress();
+                        isKeyPressed = false;
+                        return '\0';
+                    }
+                }
                 while (digitalRead(digitPins[i]) == LOW)
                     ; // Wait until button is released
+                isKeyPressed = false;
                 return '0' + i;
             }
         }
