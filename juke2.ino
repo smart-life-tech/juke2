@@ -850,22 +850,29 @@ char getKeypadInput()
             { // Confirm button press
                 if (i == 0)
                 {
+                    Serial.println("zero pressed");
                     // Handle long press for '0'
                     if (!isKeyPressed)
                     {
+                        Serial.println("do once");
                         keyPressStartTime = millis();
                         isKeyPressed = true;
                     }
-                    else if (millis() - keyPressStartTime >= 5000)
+
+                    while (digitalRead(digitPins[i]) == LOW)
                     {
-                        //generateRandomList();
-                        handleLongPress();
-                        isKeyPressed = false;
-                        return '\0';
+                        if (millis() - keyPressStartTime >= 5000)
+                        {
+                            // generateRandomList();
+                            handleLongPress();
+                            keypadLong = true;
+                            Serial.print(F("keypad long pressed"));
+                            isKeyPressed = false;
+                            return '\0';
+                        }
                     }
                 }
-                while (digitalRead(digitPins[i]) == LOW)
-                    ; // Wait until button is released
+                // Wait until button is released
                 isKeyPressed = false;
                 return '0' + i;
             }
