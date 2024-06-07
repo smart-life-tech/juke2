@@ -845,33 +845,33 @@ char getKeypadInput()
     {
         if (digitalRead(digitPins[i]) == LOW)
         {
-            delay(50); // Debounce delay
+            delay(100); // Debounce delay
             if (digitalRead(digitPins[i]) == LOW)
             { // Confirm button press
-                if (i == 0)
-                {
-                    Serial.println("zero pressed");
-                    // Handle long press for '0'
-                    if (!isKeyPressed)
-                    {
-                        Serial.println("do once");
-                        keyPressStartTime = millis();
-                        isKeyPressed = true;
-                    }
 
-                    while (digitalRead(digitPins[i]) == LOW)
+                Serial.println("button pressed");
+                // Handle long press for '0'
+                if (!isKeyPressed)
+                {
+                    Serial.println("do once");
+                    keyPressStartTime = millis();
+                    isKeyPressed = true;
+                }
+
+                while (digitalRead(digitPins[i]) == LOW)
+                {
+                    if (millis() - keyPressStartTime >= 5000)
                     {
-                        if (millis() - keyPressStartTime >= 5000)
-                        {
-                            // generateRandomList();
-                            handleLongPress();
-                            keypadLong = true;
-                            Serial.print(F("keypad long pressed"));
-                            isKeyPressed = false;
-                            return '\0';
-                        }
+                        // generateRandomList();
+                        handleLongPress();
+                        keypadLong = true;
+                        Serial.print(F("keypad long pressed"));
+                        isKeyPressed = false;
+                        return '\0';
+                        break;
                     }
                 }
+
                 // Wait until button is released
                 isKeyPressed = false;
                 return '0' + i;
