@@ -128,11 +128,12 @@ void handleLongPress()
 void generateRandomList()
 {
     Serial.println("Generating random list of 200 songs...");
-
+    digitalWrite(ledPins[2], LOW);
     // Generate and print 200 random numbers
     for (int i = 0; i < 200; i++)
     {
-        randomSeed(analogRead(A0));
+        randomSeed(random(analogRead(A0)));
+
         delay(15);
         randomNumber[i] = random(201); // Generates a random number between 0 and 100
                                        // Serial.println(randomNumber);
