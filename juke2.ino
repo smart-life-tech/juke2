@@ -132,7 +132,7 @@ void generateRandomList()
     // Generate and print 200 random numbers
     for (int i = 0; i < 200; i++)
     {
-        randomSeed(analogRead(A15));
+        randomSeed(analogRead(A0));
         delay(15);
         randomNumber[i] = random(201); // Generates a random number between 0 and 100
                                        // Serial.println(randomNumber);
