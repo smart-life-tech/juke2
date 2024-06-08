@@ -1008,6 +1008,9 @@ void loop()
     }
     else
     {
+        digitalWrite(ledPins[2], LOW);
+        digitalWrite(ledPins[1], LOW);
+        digitalWrite(ledPins[0], LOW);
         blinkLong();
     }
     continuePlayingLong();
