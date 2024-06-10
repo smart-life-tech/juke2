@@ -848,7 +848,7 @@ char getKeypadInput()
     {
         if (digitalRead(digitPins[i]) == LOW)
         {
-            delay(100); // Debounce delay
+            delay(10); // Debounce delay
             if (digitalRead(digitPins[i]) == LOW)
             { // Confirm button press
 
