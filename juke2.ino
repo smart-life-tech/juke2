@@ -187,6 +187,7 @@ bool isAlpha(char c)
 {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
+
 void testled()
 {
     for (int i = 0; i < NUM_LEDS_GROUP1; i++)
